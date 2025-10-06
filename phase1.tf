@@ -160,7 +160,7 @@ resource "aws_security_group" "rds_sg" {
 }
  
 resource "aws_iam_role" "ec2_role" {
-  name = "ec2-role-dev-new_1"
+  name = "ec2-role-dev-new_21"
  
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -208,7 +208,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state_sse" {
 }
 
 resource "aws_dynamodb_table" "tf_lock_table" {
-  name         = "terraformlocks_21"
+  name         = "terraformlocks_2002"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
