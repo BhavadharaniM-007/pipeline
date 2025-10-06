@@ -1,4 +1,4 @@
-name: pipeline 
+name: pipeline
 
 on:
   push:
@@ -11,35 +11,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Deployment Repo
+    - name: Checkout Pipeline Repo
       uses: actions/checkout@v3
-
-    - name: Clone Terraform Repo
-      run: git clone https://github.com/BhavadharaniM-007/devops.git terraform
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
 
     - name: Terraform Init
-      working-directory: terraform
+      working-directory: .
       env:
         AWS_REGION: us-east-1
       run: terraform init
 
     - name: Terraform Plan
-      working-directory: terraform
-      env:
-       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-       AWS_REGION: us-east-1
-      run: terraform plan
-
-    - name: Terraform Apply
-      working-directory: terraform
-      run: terraform apply -auto-approve
+      working-directory: .
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: us-east-1
+      run: terraform plan
+
+    - name: Terraform Apply
+      working-directory: .
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: terraform apply -auto-approve
 
   ansible:
     name: Deploy with Ansible
