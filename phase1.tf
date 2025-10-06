@@ -179,11 +179,11 @@ resource "aws_iam_role_policy_attachment" "ecr_read" {
 }
  
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name = "ec2_instance_profile_new"
+  name = "ec2_instance_profile_new_1"
   role = aws_iam_role.ec2_role.name
 }
 resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "my-unique-terraformdev-123456"
+  bucket = "my-unique-terraformdev-12345678"
   tags = {
     Name = "Terraformdev_12"
   }
