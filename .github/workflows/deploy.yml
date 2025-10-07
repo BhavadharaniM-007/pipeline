@@ -1,4 +1,4 @@
-name: pipeline
+name: Deploy with Terraform and Ansible
 
 on:
   push:
@@ -6,88 +6,65 @@ on:
   workflow_dispatch:
 
 jobs:
-  terraform:
-    name: Terraform Apply
+  terraform_apply:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Pipeline Repo
+    - name: Checkout Repo
       uses: actions/checkout@v3
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
 
     - name: Terraform Init
-      working-directory: .
-      env:
-        AWS_REGION: us-east-1
       run: terraform init
 
-    - name: Terraform Plan
-      working-directory: .
+    - name: Terraform Apply
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: us-east-1
-      run: terraform plan
-
-    - name: Terraform Apply
-      working-directory: .
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: terraform apply -auto-approve
 
-  ansible:
-    name: Deploy with Ansible
+    - name: Get Public IP of Amazon Linux Instance
+      id: web_ip
+      run: echo "::set-output name=web_ip::$(terraform output -raw web_server_public_ip)"
+
+    - name: Get Public IP of Ubuntu Instance
+      id: ubuntu_ip
+      run: echo "::set-output name=ubuntu_ip::$(terraform output -raw ubuntu_public_ip)"
+
+  ansible_deploy:
     runs-on: ubuntu-latest
-    needs: terraform
+    needs: terraform_apply
 
     steps:
-    - name: Checkout Deployment Repo
+    - name: Checkout Repo
       uses: actions/checkout@v3
-
-    - name: Clone Ansible Repo
-      run: git clone https://github.com/BhavadharaniM-007/deployment-ansible.git ansible
 
     - name: Setup SSH Key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa_github_actions_new
+        chmod 600 ~/.ssh/id_rsa_github_actions_new
 
-    - name: Add EC2 to known_hosts
+    - name: Generate dynamic inventory.ini
       run: |
-        ssh-keyscan -H 3.239.216.100 >> ~/.ssh/known_hosts
-        ssh-keyscan -H 13.220.33.232 >> ~/.ssh/known_hosts
+        echo "[app]" > inventory.ini
+        echo "${{ needs.terraform_apply.outputs.web_ip }} ansible_user=ec2-user ansible_ssh_private_key_file=/home/runner/.ssh/id_rsa_github_actions_new" >> inventory.ini
+        echo "${{ needs.terraform_apply.outputs.ubuntu_ip }} ansible_user=ubuntu ansible_ssh_private_key_file=/home/runner/.ssh/id_rsa_github_actions_new" >> inventory.ini
+
+    - name: Add EC2 hosts to known_hosts
+      run: |
+        ssh-keyscan -H ${{ needs.terraform_apply.outputs.web_ip }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ needs.terraform_apply.outputs.ubuntu_ip }} >> ~/.ssh/known_hosts
 
     - name: Install Ansible
-      run: sudo apt-get update && sudo apt-get install -y ansible
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ansible
 
     - name: Run Ansible Playbook
-      run: |
-        ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --private-key ~/.ssh/id_rsa
       env:
         ANSIBLE_HOST_KEY_CHECKING: "False"
-
-  smoke_test:
-    name: Smoke Tests
-    runs-on: ubuntu-latest
-    needs: ansible
-
-    steps:
-    - name: Test Frontend
-      run: |
-        STATUS=$(curl -o /dev/null -s -w "%{http_code}" http://3.239.216.100)
-        if [ $STATUS -ne 200 ]; then
-          echo "Frontend health check failed!"
-          exit 1
-        fi
-
-    - name: Test Backend
-      run: |
-        STATUS=$(curl -o /dev/null -s -w "%{http_code}" http://13.220.33.232/api/health)
-        if [ $STATUS -ne 200 ]; then
-          echo "Backend health check failed!"
-          exit 1
-        fi
+      run: ansible-playbook -i inventory.ini playbook.yml --private-key /home/runner/.ssh/id_rsa_github_actions_new

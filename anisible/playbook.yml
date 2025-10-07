@@ -1,0 +1,8 @@
+- name: Configure EC2 instance and deploy app
+  hosts: app
+  become: true
+
+  roles:
+    - common
+    - docker
+    - app
