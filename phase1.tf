@@ -28,14 +28,15 @@ resource "aws_subnet" "public_az1" {
   }
 }
 
-resource "aws_subnet" "public_az2" {
-  vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.50.0/24"
-  map_public_ip_on_launch = true
-  availability_zone       = "us-east-1b"
+data "aws_subnet" "public_az2" {
+  filter {
+    name   = "cidr-block"
+    values = ["10.0.20.0/24"]
+  }
 
-  tags = {
-    Name = "public-subnet-az2"
+  filter {
+    name   = "vpc-id"
+    values = ["vpc-0cb3b9f14e71a699b"] # Replace with your VPC ID
   }
 }
 
@@ -64,18 +65,19 @@ resource "aws_route_table" "public_rt" {
 
 # Route Table Associations
 resource "aws_route_table_association" "public_assoc_az1" {
-  subnet_id      = aws_subnet.public_az1.id
+  subnet_id      =data.aws_subnet.public_az1.id
   route_table_id = aws_route_table.public_rt.id
 }
 
 resource "aws_route_table_association" "public_assoc_az2" {
-  subnet_id      = aws_subnet.public_az2.id
+  subnet_id      = data.aws_subnet.public_az2.id
+
   route_table_id = aws_route_table.public_rt.id
 }
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-  name        = "web-sg-v2"
+  name        = "web-sg-v5"
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -170,7 +172,7 @@ resource "aws_instance" "web_server" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "TerraformWebServer_123"
+    Name = "TerraformWebServer_7646"
   }
 }
 
@@ -183,7 +185,7 @@ resource "aws_instance" "ubuntu" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "UbuntuInstance_122"
+    Name = "UbuntuInstance-1897"
   }
 }
 
@@ -245,7 +247,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state_sse" {
 
 # DynamoDB Table for Terraform Locking
 resource "aws_dynamodb_table" "tf_lock_table" {
-  name         = "terraformlocks_1945"
+  name         = "terraformlocks_20034"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
