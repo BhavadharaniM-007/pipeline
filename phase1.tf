@@ -30,7 +30,7 @@ resource "aws_subnet" "public_az1" {
 
 resource "aws_subnet" "public_az2" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.20.0/24"
+  cidr_block              = "10.0.50.0/24"
   map_public_ip_on_launch = true
   availability_zone       = "us-east-1b"
 
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_assoc_az2" {
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-  name        = "web-sg"
+  name        = "web-sg-v2"
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -170,7 +170,7 @@ resource "aws_instance" "web_server" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "TerraformWebServer_1"
+    Name = "TerraformWebServer_123"
   }
 }
 
@@ -183,7 +183,7 @@ resource "aws_instance" "ubuntu" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "UbuntuInstance"
+    Name = "UbuntuInstance_122"
   }
 }
 
@@ -218,7 +218,7 @@ resource "aws_db_instance" "default" {
 
 # S3 Bucket for Terraform state
 resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "my-unique-terraformdev-12345"
+  bucket = "bhar-123"
 
   tags = {
     Name = "Terraformdev_12"
