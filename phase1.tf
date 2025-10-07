@@ -19,7 +19,7 @@ data "aws_vpc" "existing" {
 # Subnets
 resource "aws_subnet" "public_az1" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.10.0/24"
+  cidr_block              = "10.0.30.0/24"
   map_public_ip_on_launch = true
   availability_zone       = "us-east-1a"
 
@@ -40,13 +40,13 @@ resource "aws_subnet" "public_az2" {
 }
 
 # Internet Gateway
-resource "aws_internet_gateway" "igw" {
-  vpc_id = data.aws_vpc.existing.id
-
-  tags = {
-    Name = "main-igw"
+data "aws_internet_gateway" "existing_igw" {
+  filter {
+    name   = "attachment.vpc-id"
+    values = [data.aws_vpc.existing.id]
   }
 }
+
 
 # Route Table
 resource "aws_route_table" "public_rt" {
@@ -54,7 +54,7 @@ resource "aws_route_table" "public_rt" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
+    gateway_id = data.aws_internet_gateway.existing_igw.id
   }
 
   tags = {
@@ -134,7 +134,7 @@ resource "aws_security_group" "rds_sg" {
 
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
-  name = "ec2-role-dev-new-20"
+  name = "ec2-role-dev-new-233"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -218,7 +218,7 @@ resource "aws_db_instance" "default" {
 
 # S3 Bucket for Terraform state
 resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "my-unique-terraformdev_123"
+  bucket = "my-unique-terraformdev-12345"
 
   tags = {
     Name = "Terraformdev_12"
