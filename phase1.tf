@@ -29,7 +29,7 @@ resource "aws_subnet" "public_az1" {
 }
 resource "aws_subnet" "public_az2" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.20.0/24"
+  cidr_block              = "10.0.2.0/24"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
   tags = {
@@ -109,7 +109,7 @@ resource "aws_security_group" "web_sg" {
 
 # Security Group for RDS (MySQL only from web_sg)
 resource "aws_security_group" "rds_sg" {
-  name        = "rds-sg"
+  name        = "rds-sg-devops"
   description = "Allow MySQL traffic from web servers"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -134,7 +134,7 @@ resource "aws_security_group" "rds_sg" {
 
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
-  name = "ec2-role-dev-new-233"
+  name = "ec2-role-dev-new1234"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -218,7 +218,7 @@ resource "aws_db_instance" "default" {
 
 # S3 Bucket for Terraform state
 resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "bhar-123"
+  bucket = "kiki-1234"
 
   tags = {
     Name = "Terraformdev_12"
