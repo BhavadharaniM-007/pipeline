@@ -270,7 +270,7 @@ output "ubuntu_public_ip" {
   value       = aws_instance.ubuntu.public_ip
 }
 output "vpc_id" {
-  value = adata.aws_vpc.existing.id
+  value = data.aws_vpc.existing.id
 }
 
 output "subnet_ids" {
