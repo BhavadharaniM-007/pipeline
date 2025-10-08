@@ -29,7 +29,7 @@ resource "aws_subnet" "public_az1" {
 }
 resource "aws_subnet" "public_az2" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.7.0/24"
+  cidr_block              = "10.0.6.0/24"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
   tags = {
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_assoc_az2" {
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-  name        = "web-sg-1543"
+  name        = "web-sg-67623892"
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -109,7 +109,7 @@ resource "aws_security_group" "web_sg" {
 
 # Security Group for RDS (MySQL only from web_sg)
 resource "aws_security_group" "rds_sg" {
-  name        = "rds-sg-devops9890"
+  name        = "rds-sg-ops1234987"
   description = "Allow MySQL traffic from web servers"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -134,7 +134,7 @@ resource "aws_security_group" "rds_sg" {
 
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
-  name = "ec21223"
+  name = "ec2nbgjmnh0987"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -170,7 +170,7 @@ resource "aws_instance" "web_server" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "serversample"
+    Name = "linuxdevops-99"
   }
 }
 
@@ -183,7 +183,7 @@ resource "aws_instance" "ubuntu" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "Ubuntuserver123east"
+    Name = "Ubuntuserverwest-99"
   }
 }
 
@@ -218,7 +218,7 @@ resource "aws_db_instance" "default" {
 
 # S3 Bucket for Terraform state
 resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "samplebucketfordev"
+  bucket = "samplebucketfordev-12367west"
 
   tags = {
     Name = "Terraform00987"
@@ -255,7 +255,7 @@ resource "aws_dynamodb_table" "tf_lock_table" {
   }
 
   tags = {
-    Name = "Terraformlock12789"
+    Name = "Terraformlock56436"
   }
 }
 
