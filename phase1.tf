@@ -265,14 +265,17 @@ output "web_server_public_ip" {
   value       = aws_instance.web_server.public_ip
 }
 
-output "ubuntu_public_ip" {
-  description = "Public IP of Ubuntu instance"
-  value       = aws_instance.ubuntu.public_ip
-}
 output "vpc_id" {
   value = data.aws_vpc.existing.id
 }
 
 output "subnet_ids" {
   value = [aws_subnet.public_az1.id, aws_subnet.public_az2.id]
+}
+output "ec2_user_public_ip" {
+  value = aws_instance.web_server.public_ip
+}
+
+output "ubuntu_user_public_ip" {
+  value = aws_instance.ubuntu.public_ip
 }
