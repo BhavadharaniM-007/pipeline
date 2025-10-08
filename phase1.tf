@@ -172,7 +172,7 @@ resource "aws_instance" "web_server" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "TerraformWebServer_7646"
+    Name = "TerraformWebServer_76"
   }
 }
 
@@ -185,7 +185,7 @@ resource "aws_instance" "ubuntu" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "UbuntuInstance-1897"
+    Name = "UbuntuInstance-18"
   }
 }
 
@@ -247,7 +247,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state_sse" {
 
 # DynamoDB Table for Terraform Locking
 resource "aws_dynamodb_table" "tf_lock_table" {
-  name         = "terraformlocks_20034"
+  name         = "terraformlocks_2123"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
@@ -257,7 +257,7 @@ resource "aws_dynamodb_table" "tf_lock_table" {
   }
 
   tags = {
-    Name = "TerraformLockTable"
+    Name = "TerraformLockTable-12234e"
   }
 }
 
