@@ -19,7 +19,7 @@ data "aws_vpc" "existing" {
 # Subnets
 resource "aws_subnet" "public_az1" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.1.0/24"
+  cidr_block              = "10.0.5.0/24"
   map_public_ip_on_launch = true
   availability_zone       = "us-east-1a"
 
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_assoc_az2" {
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-  name        = "web-sg-v5"
+  name        = "web-sg-123"
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -134,7 +134,7 @@ resource "aws_security_group" "rds_sg" {
 
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
-  name = "ec2-role-dev-new1234"
+  name = "ec2-role-devops"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -170,7 +170,7 @@ resource "aws_instance" "web_server" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "TerraformWebServer_76"
+    Name = "TerraformWebServerdevops"
   }
 }
 
@@ -183,7 +183,7 @@ resource "aws_instance" "ubuntu" {
   associate_public_ip_address = true
 
   tags = {
-    Name = "UbuntuInstance-18"
+    Name = "UbuntuInstance12345-12"
   }
 }
 
@@ -218,10 +218,10 @@ resource "aws_db_instance" "default" {
 
 # S3 Bucket for Terraform state
 resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "kiki-1234"
+  bucket = "sample1234-1"
 
   tags = {
-    Name = "Terraformdev_12"
+    Name = "Terraformdevops-007"
   }
 }
 
@@ -245,7 +245,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state_sse" {
 
 # DynamoDB Table for Terraform Locking
 resource "aws_dynamodb_table" "tf_lock_table" {
-  name         = "terraformlocks_2123"
+  name         = "terraformlocks1234-1"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
