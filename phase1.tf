@@ -27,6 +27,15 @@ resource "aws_subnet" "public_az1" {
     Name = "public-subnet-az1"
   }
 }
+resource "aws_subnet" "public_az2" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.20.0/24"
+  availability_zone       = "us-east-1b"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "Public Subnet AZ2"
+  }
+}
 
 data "aws_subnet" "public_az2" {
   filter {
