@@ -28,7 +28,7 @@ resource "aws_subnet" "public_az1" {
   }
 }
 resource "aws_subnet" "public_az2" {
-  vpc_id                  = aws_vpc.main.id
+  vpc_id                  = data.aws_vpc.existing.id
   cidr_block              = "10.0.20.0/24"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
@@ -37,17 +37,6 @@ resource "aws_subnet" "public_az2" {
   }
 }
 
-data "aws_subnet" "public_az2" {
-  filter {
-    name   = "cidr-block"
-    values = ["10.0.2.0/24"]
-  }
-
-  filter {
-    name   = "vpc-id"
-    values = ["vpc-0cb3b9f14e71a699b"] # Replace with your VPC ID
-  }
-}
 
 # Internet Gateway
 data "aws_internet_gateway" "existing_igw" {
@@ -74,12 +63,12 @@ resource "aws_route_table" "public_rt" {
 
 # Route Table Associations
 resource "aws_route_table_association" "public_assoc_az1" {
-  subnet_id      =data.aws_subnet.public_az1.id
+  subnet_id      =aws_subnet.public_az1.id
   route_table_id = aws_route_table.public_rt.id
 }
 
 resource "aws_route_table_association" "public_assoc_az2" {
-  subnet_id      = data.aws_subnet.public_az2.id
+  subnet_id      = aws_subnet.public_az2.id
 
   route_table_id = aws_route_table.public_rt.id
 }
@@ -279,4 +268,11 @@ output "web_server_public_ip" {
 output "ubuntu_public_ip" {
   description = "Public IP of Ubuntu instance"
   value       = aws_instance.ubuntu.public_ip
+}
+output "vpc_id" {
+  value = adata.aws_vpc.existing.id
+}
+
+output "subnet_ids" {
+  value = [aws_subnet.public_az1.id, aws_subnet.public_az2.id]
 }
