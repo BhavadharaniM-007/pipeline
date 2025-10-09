@@ -8,6 +8,9 @@ on:
 jobs:
   terraform_apply:
     runs-on: ubuntu-latest
+    outputs:
+      ec2_ip: ${{steps.get_ec2_ip.outputs.ec2_ip}}
+      ubuntu_ip: ${{steps.get_ubuntu_ip.outputs.ubuntu_ip}}
 
     steps:
     - name: Checkout Repo
@@ -26,13 +29,13 @@ jobs:
         AWS_REGION: us-east-1
       run: terraform apply -auto-approve
 
-    - name: Get Public IP of Amazon Linux Instance
-      id: web_ip
-      run: echo "::set-output name=web_ip::$(terraform output -raw web_server_public_ip)"
+    - name: Get EC2 public IP
+      id: get_ec2_ip
+      run: echo "ec2_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
 
-    - name: Get Public IP of Ubuntu Instance
-      id: ubuntu_ip
-      run: echo "::set-output name=ubuntu_ip::$(terraform output -raw ubuntu_public_ip)"
+    - name: Get Ubuntu Public IP   
+      id: get_ubuntu_ip
+      run: echo "=ubuntu_ip=$(terraform output -raw ubuntu_public_ip)" >> $GITHUB_OUTPUT
 
   ansible_deploy:
     runs-on: ubuntu-latest
@@ -51,12 +54,12 @@ jobs:
     - name: Generate dynamic inventory.ini
       run: |
         echo "[app]" > inventory.ini
-        echo "${{ needs.terraform_apply.outputs.web_ip }} ansible_user=ec2-user ansible_ssh_private_key_file=/home/runner/.ssh/id_rsa_github_actions_new" >> inventory.ini
+        echo "${{ needs.terraform_apply.outputs.ec2_ip }} ansible_user=ec2-user ansible_ssh_private_key_file=/home/runner/.ssh/id_rsa_github_actions_new" >> inventory.ini
         echo "${{ needs.terraform_apply.outputs.ubuntu_ip }} ansible_user=ubuntu ansible_ssh_private_key_file=/home/runner/.ssh/id_rsa_github_actions_new" >> inventory.ini
 
     - name: Add EC2 hosts to known_hosts
       run: |
-        ssh-keyscan -H ${{ needs.terraform_apply.outputs.web_ip }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ needs.terraform_apply.outputs.ec2_ip }} >> ~/.ssh/known_hosts
         ssh-keyscan -H ${{ needs.terraform_apply.outputs.ubuntu_ip }} >> ~/.ssh/known_hosts
 
     - name: Install Ansible
