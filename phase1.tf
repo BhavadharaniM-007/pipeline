@@ -19,7 +19,7 @@ data "aws_vpc" "existing" {
 # Subnets
 resource "aws_subnet" "public_az1" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.63.0/24"
+  cidr_block              = "10.0.67.0/24"
   map_public_ip_on_launch = true
   availability_zone       = "us-east-1a"
 
@@ -29,7 +29,7 @@ resource "aws_subnet" "public_az1" {
 }
 resource "aws_subnet" "public_az2" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.87.0/24"
+  cidr_block              = "10.0.83.0/24"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
   tags = {
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_assoc_az2" {
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-  name        = "web-sgfinal-21052655"
+  name        = "web-sgfinal1234"
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
