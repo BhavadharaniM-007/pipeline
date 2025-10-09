@@ -31,12 +31,22 @@ jobs:
 
     - name: Get EC2 public IP
       id: get_ec2_ip
-      run: echo "ec2_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
-
+      run:  |
+        IP=$(terraform output -raw ec2_user_public_ip || echo "")
+        if [ -z "$IP" ]; then
+          echo "Failed to get EC2 IP"
+          exit 1
+        fi
+        echo "ec2_ip=$IP" >> $GITHUB_OUTPUT
     - name: Get Ubuntu Public IP   
       id: get_ubuntu_ip
-      run: echo "=ubuntu_ip=$(terraform output -raw ubuntu_public_ip)" >> $GITHUB_OUTPUT
-
+      run: |
+        IP=$(terraform output -raw ubuntu_user_public_ip || echo "")
+        if [ -z "$IP" ]; then
+          echo "Failed to get Ubuntu IP"
+          exit 1
+        fi
+        echo "ubuntu_ip=$IP" >> $GITHUB_OUTPUT
   ansible_deploy:
     runs-on: ubuntu-latest
     needs: terraform_apply

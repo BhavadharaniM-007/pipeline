@@ -19,7 +19,7 @@ data "aws_vpc" "existing" {
 # Subnets
 resource "aws_subnet" "public_az1" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.15.0/24"
+  cidr_block              = "10.0.44.0/24"
   map_public_ip_on_launch = true
   availability_zone       = "us-east-1a"
 
@@ -29,7 +29,7 @@ resource "aws_subnet" "public_az1" {
 }
 resource "aws_subnet" "public_az2" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.33.0/24"
+  cidr_block              = "10.0.55.0/24"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
   tags = {
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_assoc_az2" {
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-  name        = "web-sgfinal2655"
+  name        = "web-sgfinal2105"
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -109,7 +109,7 @@ resource "aws_security_group" "web_sg" {
 
 # Security Group for RDS (MySQL only from web_sg)
 resource "aws_security_group" "rds_sg" {
-  name        = "rds-sg2655"
+  name        = "rds-sg2105"
   description = "Allow MySQL traffic from web servers"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -134,7 +134,7 @@ resource "aws_security_group" "rds_sg" {
 
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
-  name = "ec2ops2655-final2655556"
+  name = "ec2ops2655-final2105"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -156,7 +156,7 @@ resource "aws_iam_role_policy_attachment" "ecr_read" {
 
 # IAM Instance Profile for EC2
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name = "ec2namefordevops-final-2655"
+  name = "ec2namefordevops2105"
   role = aws_iam_role.ec2_role.name
 }
 
@@ -189,7 +189,7 @@ resource "aws_instance" "ubuntu" {
 
 # RDS Subnet Group
 resource "aws_db_subnet_group" "default" {
-  name       = "main-db-sub2655"
+  name       = "main-db-sub2105"
   subnet_ids = [aws_subnet.public_az1.id, aws_subnet.public_az2.id]
 
   tags = {
@@ -218,10 +218,10 @@ resource "aws_db_instance" "default" {
 
 # S3 Bucket for Terraform state
 resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "bucketunique-2655"
+  bucket = "bucketunique-2105"
 
   tags = {
-    Name = "T2655"
+    Name = "T2105"
   }
 }
 
@@ -245,7 +245,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "tf_state_sse" {
 
 # DynamoDB Table for Terraform Locking
 resource "aws_dynamodb_table" "tf_lock_table" {
-  name         = "lock2655-final-2655"
+  name         = "lock2655-final-2105"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
@@ -255,7 +255,7 @@ resource "aws_dynamodb_table" "tf_lock_table" {
   }
 
   tags = {
-    Name = "Terra2655"
+    Name = "Terra2105"
   }
 }
 
