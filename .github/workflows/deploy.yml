@@ -33,7 +33,7 @@ jobs:
         id: get_ec2_ip
         run: |
           RAW_OUTPUT=$(terraform output -raw ec2_user_public_ip 2>/dev/null)
-          IP=$(echo "$RAW_OUTPUT" | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}')
+          IP=$(echo "$RAW_OUTPUT" | tr -d '"')
 
           if [ -z "$IP" ]; then
             echo "Failed to get a valid IP address from Terraform output"
