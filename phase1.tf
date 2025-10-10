@@ -19,11 +19,7 @@ data "aws_vpc" "existing" {
 # Subnets
 resource "aws_subnet" "public_az1" {
   vpc_id                  = data.aws_vpc.existing.id
-<<<<<<< HEAD
-  cidr_block              = "10.0.63.0/24"
-=======
   cidr_block              = "10.0.41.0/24"
->>>>>>> 0f1883e (initial commit)
   map_public_ip_on_launch = true
   availability_zone       = "us-east-1a"
 
@@ -33,11 +29,7 @@ resource "aws_subnet" "public_az1" {
 }
 resource "aws_subnet" "public_az2" {
   vpc_id                  = data.aws_vpc.existing.id
-<<<<<<< HEAD
-  cidr_block              = "10.0.87.0/24"
-=======
   cidr_block              = "10.0.84.0/24"
->>>>>>> 0f1883e (initial commit)
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
   tags = {
@@ -83,11 +75,7 @@ resource "aws_route_table_association" "public_assoc_az2" {
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-<<<<<<< HEAD
-  name        = "web-sgfinal-21052655"
-=======
   name        = "grp789"
->>>>>>> 0f1883e (initial commit)
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -121,11 +109,8 @@ resource "aws_security_group" "web_sg" {
 
 # Security Group for RDS (MySQL only from web_sg)
 resource "aws_security_group" "rds_sg" {
-<<<<<<< HEAD
-  name        = "rds26552105"
-=======
+
   name        = "maha-20191817161514131211"
->>>>>>> 0f1883e (initial commit)
   description = "Allow MySQL traffic from web servers"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -150,11 +135,9 @@ resource "aws_security_group" "rds_sg" {
 
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
-<<<<<<< HEAD
-  name = "ec2ops26552105-final"
-=======
+
   name = "rolesdev20191817161514131211"
->>>>>>> 0f1883e (initial commit)
+
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -176,11 +159,7 @@ resource "aws_iam_role_policy_attachment" "ecr_read" {
 
 # IAM Instance Profile for EC2
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-<<<<<<< HEAD
-  name = "ec2name2105-finalattempt"
-=======
   name = "instances-20191817161514131211"
->>>>>>> 0f1883e (initial commit)
   role = aws_iam_role.ec2_role.name
 }
 
@@ -192,40 +171,16 @@ resource "aws_instance" "web_server" {
   vpc_security_group_ids      = [aws_security_group.web_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
   associate_public_ip_address = true
-<<<<<<< HEAD
-=======
-  key_name ="ssh_id_rsa_github_actions_new"
->>>>>>> 0f1883e (initial commit)
+
 
   tags = {
     Name = "linuxdevopsfinal-2655"
   }
 }
 
-<<<<<<< HEAD
-# Ubuntu EC2 instance
-resource "aws_instance" "ubuntu" {
-  ami                         = "ami-042e8287309f5df03"  # Ubuntu Server 20.04 LTS
-  instance_type               = "t3.micro"
-  subnet_id                   = aws_subnet.public_az2.id
-  vpc_security_group_ids      = [aws_security_group.web_sg.id]
-  associate_public_ip_address = true
-
-  tags = {
-    Name = "Ubuntuserver1234rtfinal-2655"
-  }
-}
-
-# RDS Subnet Group
-resource "aws_db_subnet_group" "default" {
-  name       = "main-db-sub2105"
-=======
-
-
 # RDS Subnet Group
 resource "aws_db_subnet_group" "default" {
   name       = "mainmani-890123561234"
->>>>>>> 0f1883e (initial commit)
   subnet_ids = [aws_subnet.public_az1.id, aws_subnet.public_az2.id]
 
   tags = {
@@ -311,10 +266,3 @@ output "subnet_ids" {
 output "ec2_user_public_ip" {
   value = aws_instance.web_server.public_ip
 }
-<<<<<<< HEAD
-
-output "ubuntu_user_public_ip" {
-  value = aws_instance.ubuntu.public_ip
-}
-=======
->>>>>>> 0f1883e (initial commit)
