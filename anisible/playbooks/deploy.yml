@@ -1,0 +1,23 @@
+---
+- name: Deploy Application to Web Server
+  hosts: web
+  become: yes
+
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: true
+
+    - name: Pull Docker image
+      command: docker pull dharanimohan22/yourimage:latest
+
+    - name: Run container
+      command: docker run -d -p 80:80 dharanimohan22/yourimage:latest
+
+    - name: Health check
+      uri:
+        url: http://localhost
+        status_code: 200
+        return_content: yes

@@ -1,0 +1,27 @@
+# Java build files
+*.class
+*.jar
+*.war
+*.ear
+target/
+
+# Logs
+*.log
+
+# IDEs
+*.iml
+.idea/
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Maven
+.mvn/
+.settings/
+dependency-reduced-pom.xml
+
+# Docker
+*.env
+docker-compose.override.yml
