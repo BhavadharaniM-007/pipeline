@@ -19,7 +19,7 @@ data "aws_vpc" "existing" {
 # Subnets
 resource "aws_subnet" "public_az1" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.32.0/24"
+  cidr_block              = "10.0.57.0/24"
   map_public_ip_on_launch = true
   availability_zone       = "us-east-1a"
 
@@ -29,7 +29,7 @@ resource "aws_subnet" "public_az1" {
 }
 resource "aws_subnet" "public_az2" {
   vpc_id                  = data.aws_vpc.existing.id
-  cidr_block              = "10.0.37.0/24"
+  cidr_block              = "10.0.67.0/24"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
   tags = {
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_assoc_az2" {
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-  name        = "grp20202928"
+  name        = "grp30393834"
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -110,7 +110,7 @@ resource "aws_security_group" "web_sg" {
 # Security Group for RDS (MySQL only from web_sg)
 resource "aws_security_group" "rds_sg" {
 
-  name        = "dharani-1716151413"
+  name        = "dharanimohan-1716151413"
   description = "Allow MySQL traffic from web servers"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -136,7 +136,7 @@ resource "aws_security_group" "rds_sg" {
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
 
-  name = "sampledevveni20191817161514131211"
+  name = "sampledevswe20191817161514131211"
 
 
   assume_role_policy = jsonencode({
@@ -159,7 +159,7 @@ resource "aws_iam_role_policy_attachment" "ecr_read" {
 
 # IAM Instance Profile for EC2
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name = "instantveni-20191817161514131211"
+  name = "instantswe-20191817161514131211"
   role = aws_iam_role.ec2_role.name
 }
 
@@ -180,7 +180,7 @@ resource "aws_instance" "web_server" {
 
 # RDS Subnet Group
 resource "aws_db_subnet_group" "default" {
-  name       = "veni-890123561234"
+  name       = "swe-890123561234"
   subnet_ids = [aws_subnet.public_az1.id, aws_subnet.public_az2.id]
 
   tags = {
