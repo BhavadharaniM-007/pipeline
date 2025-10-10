@@ -13,7 +13,7 @@ provider "aws" {
 
 # Reference existing VPC instead of creating a new one
 data "aws_vpc" "existing" {
-  id = "vpc-0cb3b9f14e71a699b"  # <-- Replace with your existing VPC ID
+  id = "vpc-0f1d46cb02397736d"  # <-- Replace with your existing VPC ID
 }
 
 # Subnets
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_assoc_az2" {
 
 # Security Group for EC2 instances (SSH + HTTP allowed)
 resource "aws_security_group" "web_sg" {
-  name        = "grp3039383736353433"
+  name        = "group999888777"
   description = "Allow SSH and HTTP"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -110,7 +110,7 @@ resource "aws_security_group" "web_sg" {
 # Security Group for RDS (MySQL only from web_sg)
 resource "aws_security_group" "rds_sg" {
 
-  name        = "terratablecom-1716151413"
+  name        = "terratab-1716151413"
   description = "Allow MySQL traffic from web servers"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -136,7 +136,7 @@ resource "aws_security_group" "rds_sg" {
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
 
-  name = "sampledevterratablell20191817161514131211"
+  name = "sampledevterratab20191817161514131211"
 
 
   assume_role_policy = jsonencode({
@@ -159,7 +159,7 @@ resource "aws_iam_role_policy_attachment" "ecr_read" {
 
 # IAM Instance Profile for EC2
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  name = "instantterratable-20191817161514131211"
+  name = "instantterratab-20191817161514131211"
   role = aws_iam_role.ec2_role.name
 }
 
@@ -180,7 +180,7 @@ resource "aws_instance" "web_server" {
 
 # RDS Subnet Group
 resource "aws_db_subnet_group" "default" {
-  name       = "terratablesubnet-8901235612342133"
+  name       = "terratablesubgrp-8901235612342133"
   subnet_ids = [aws_subnet.public_az1.id, aws_subnet.public_az2.id]
 
   tags = {
