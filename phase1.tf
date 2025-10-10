@@ -110,7 +110,7 @@ resource "aws_security_group" "web_sg" {
 # Security Group for RDS (MySQL only from web_sg)
 resource "aws_security_group" "rds_sg" {
 
-  name        = "dharanimohan-1716151413"
+  name        = "bhar-1716151413"
   description = "Allow MySQL traffic from web servers"
   vpc_id      = data.aws_vpc.existing.id
 
@@ -136,7 +136,7 @@ resource "aws_security_group" "rds_sg" {
 # IAM Role for EC2 instances
 resource "aws_iam_role" "ec2_role" {
 
-  name = "sampledeveec220191817161514131211"
+  name = "sampledeveec2ops20191817161514131211"
 
 
   assume_role_policy = jsonencode({
@@ -180,7 +180,7 @@ resource "aws_instance" "web_server" {
 
 # RDS Subnet Group
 resource "aws_db_subnet_group" "default" {
-  name       = "ec2-890123561234"
+  name       = "ec2-8901235612342133"
   subnet_ids = [aws_subnet.public_az1.id, aws_subnet.public_az2.id]
 
   tags = {
