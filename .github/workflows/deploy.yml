@@ -3,7 +3,8 @@ name: Deploy with Terraform and Ansible
 
 on:
   push:
-    branches: [ sample]
+    branches: 
+      - sample
   workflow_dispatch:
 
 jobs:
